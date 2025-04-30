@@ -1,6 +1,9 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.model.Book;
+import com.example.bookstore.service.BookService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@RequiredArgsConstructor
 public class BookController {
+
+    private final BookService bookService;
+
     @GetMapping("/hello")
     public String sayHello() {
         return "Добро пожаловать в книжный магазин!";
@@ -18,9 +25,6 @@ public class BookController {
 
     @GetMapping
     public List<Book> getBooks() {
-        List<Book> books = new ArrayList<>();
-        books.add(new Book(1L, "Java", "Java"));
-        books.add(new Book(2L, "SQL", "SQL"));
-        return books;
+        return  bookService.getAllBooks();
     }
 }
