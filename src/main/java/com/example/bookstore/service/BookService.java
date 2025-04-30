@@ -24,4 +24,9 @@ public class BookService {
     public Book getBookById(long id) {
         return books.stream().filter(book -> book.getId() == id).findFirst().orElseThrow(() -> new BookNotFoundException(id));
     }
+
+    public Book createBook(Book book) {
+        books.add(book);
+        return book;
+    }
 }
