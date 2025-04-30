@@ -1,5 +1,6 @@
 package com.example.bookstore.service;
 
+import com.example.bookstore.exception.BookNotFoundException;
 import com.example.bookstore.model.Book;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +22,6 @@ public class BookService {
     }
 
     public Book getBookById(long id) {
-        for (Book book : books) {
-            if (book.getId() == id) {
-                return book;
-            }
-        }
-        return null;
+        return books.stream().filter(book -> book.getId() == id).findFirst().orElseThrow(() -> new BookNotFoundException(id));
     }
 }

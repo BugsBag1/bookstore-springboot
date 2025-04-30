@@ -32,10 +32,6 @@ public class BookController {
 
     @GetMapping("/{id}")
     public Book getBookById(@PathVariable Long id) {
-        Book book = bookService.getBookById(id);
-        if (book == null) {
-            throw new BookNotFoundException("404");
-        }
-        return book;
+        return bookService.getBookById(id);
     }
 }
