@@ -1,10 +1,12 @@
 package com.example.bookstore.controller;
 
+import com.example.bookstore.exception.BookNotFoundException;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,5 +28,14 @@ public class BookController {
     @GetMapping
     public List<Book> getBooks() {
         return  bookService.getAllBooks();
+    }
+
+    @GetMapping("/{id}")
+    public Book getBookById(@PathVariable Long id) {
+        Book book = bookService.getBookById(id);
+        if (book == null) {
+            throw new BookNotFoundException("404");
+        }
+        return book;
     }
 }
