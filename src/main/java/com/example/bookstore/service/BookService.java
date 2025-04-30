@@ -29,4 +29,20 @@ public class BookService {
         books.add(book);
         return book;
     }
+
+    public Book updateBook(Long currId,Book book) {
+        Book NeedBook = getBookById(currId);
+        if (NeedBook != null) {
+            NeedBook.setTitle(book.getTitle());
+            NeedBook.setAuthor(book.getAuthor());
+        }
+        return NeedBook;
+    }
+
+    public void deleteBook(Long bookId) {
+        Book book = getBookById(bookId);
+        if (book != null) {
+            books.remove(book);
+        }
+    }
 }
