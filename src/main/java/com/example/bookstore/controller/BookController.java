@@ -1,5 +1,7 @@
 package com.example.bookstore.controller;
 
+import com.example.bookstore.DTO.BookRequestDTO;
+import com.example.bookstore.DTO.BookResponseDTO;
 import com.example.bookstore.exception.BookNotFoundException;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.service.BookService;
@@ -27,26 +29,26 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> getBooks() {
+    public List<BookResponseDTO> getBooks() {
         return  bookService.getAllBooks();
     }
 
     @GetMapping("/{id}")
-    public Book getBookById(@PathVariable Long id) {
+    public BookResponseDTO getBookById(@PathVariable Long id) {
         return bookService.getBookById(id);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Book> createBook(@Valid @RequestBody Book book) {
-        System.out.println("CREATE NEW BOOK" + book);
-        Book newBook = bookService.createBook(book);
+    public ResponseEntity<Book> createBook(@Valid @RequestBody BookRequestDTO requestDTO) {
+        System.out.println("CREATE NEW BOOK" + requestDTO);
+        Book newBook = bookService.createBook(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newBook);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @Valid @RequestBody Book book) {
-        System.out.println("UPDATE NEW BOOK" + book);
-        Book updateBook = bookService.updateBook(id, book);
+    public ResponseEntity<BookResponseDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequestDTO requestDTO) {
+        System.out.println("UPDATE NEW BOOK" + requestDTO);
+        BookResponseDTO updateBook = bookService.updateBook(id, requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updateBook);
     }
 
