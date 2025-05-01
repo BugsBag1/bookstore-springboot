@@ -2,32 +2,30 @@ package com.example.bookstore.service;
 
 import com.example.bookstore.exception.BookNotFoundException;
 import com.example.bookstore.model.Book;
+import com.example.bookstore.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BookService {
 
-    final static List<Book> books = new ArrayList<>();
+    final BookRepository bookRepository;
 
-    static {
-        books.add(new Book(1L, "Java", "Java"));
-        books.add(new Book(2L, "SQL", "SQL"));
-    }
 
     public List<Book> getAllBooks() {
-        return books;
+        return bookRepository.findAll();
     }
 
     public Book getBookById(long id) {
-        return books.stream().filter(book -> book.getId() == id).findFirst().orElseThrow(() -> new BookNotFoundException(id));
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
     public Book createBook(Book book) {
-        books.add(book);
-        return book;
+        return bookRepository.save(book);
     }
 
     public Book updateBook(Long currId,Book book) {
@@ -35,14 +33,12 @@ public class BookService {
         if (NeedBook != null) {
             NeedBook.setTitle(book.getTitle());
             NeedBook.setAuthor(book.getAuthor());
+            bookRepository.save(NeedBook);
         }
         return NeedBook;
     }
 
     public void deleteBook(Long bookId) {
-        Book book = getBookById(bookId);
-        if (book != null) {
-            books.remove(book);
-        }
+        bookRepository.deleteById(bookId);
     }
 }

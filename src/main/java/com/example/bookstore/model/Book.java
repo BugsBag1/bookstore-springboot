@@ -1,5 +1,6 @@
 package com.example.bookstore.model;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -9,7 +10,11 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
+@Table(name = "book_table")
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull(message = "Название книги не должен быть пустым")
