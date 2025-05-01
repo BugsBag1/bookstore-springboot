@@ -40,9 +40,11 @@ public class BookService {
     }
 
     public BookResponseDTO updateBook(Long currId,BookRequestDTO requestDTO) {
-        BookResponseDTO bookToUpdate = getBookById(currId);
-        bookRepository.save(BookMapper.toEntity(requestDTO));
-        return bookToUpdate;
+        Book book = bookRepository.findById(currId).orElseThrow(() -> new BookNotFoundException(currId));
+        book.setTitle(requestDTO.getTitle());
+        book.setAuthor(requestDTO.getAuthor());
+        bookRepository.save(book);
+        return BookMapper.toDTO(book);
     }
 
     public void deleteBook(Long bookId) {
