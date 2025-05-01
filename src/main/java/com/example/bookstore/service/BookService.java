@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookService {
 
-    final BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
 
     public List<Book> getAllBooks() {
@@ -29,13 +29,11 @@ public class BookService {
     }
 
     public Book updateBook(Long currId,Book book) {
-        Book NeedBook = getBookById(currId);
-        if (NeedBook != null) {
-            NeedBook.setTitle(book.getTitle());
-            NeedBook.setAuthor(book.getAuthor());
-            bookRepository.save(NeedBook);
-        }
-        return NeedBook;
+        Book bookToUpdate = getBookById(currId);
+        bookToUpdate.setTitle(book.getTitle());
+        bookToUpdate.setAuthor(book.getAuthor());
+        bookRepository.save(bookToUpdate);
+        return bookToUpdate;
     }
 
     public void deleteBook(Long bookId) {
