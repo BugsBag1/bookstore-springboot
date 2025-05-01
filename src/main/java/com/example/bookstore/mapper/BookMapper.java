@@ -2,13 +2,14 @@ package com.example.bookstore.mapper;
 
 import com.example.bookstore.DTO.BookRequestDTO;
 import com.example.bookstore.DTO.BookResponseDTO;
+import com.example.bookstore.model.Author;
 import com.example.bookstore.model.Book;
 
 public class BookMapper {
-    public static Book toEntity(BookRequestDTO reqDTO) {
+    public static Book toEntity(BookRequestDTO reqDTO, Author author) {
         Book book = new Book();
         book.setTitle(reqDTO.getTitle());
-        book.setAuthor(reqDTO.getAuthor());
+        book.setAuthor(author);
         return book;
     }
 
@@ -16,6 +17,7 @@ public class BookMapper {
         BookResponseDTO dto = new BookResponseDTO();
         dto.setTitle(entity.getTitle());
         dto.setId(entity.getId());
+        dto.setAuthorName(entity.getAuthor().getName());
         return dto;
     }
 }

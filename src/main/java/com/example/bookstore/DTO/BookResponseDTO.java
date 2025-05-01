@@ -6,4 +6,5 @@ import lombok.Data;
 public class BookResponseDTO {
     private Long id;
     private String title;
+    private String authorName;
 }

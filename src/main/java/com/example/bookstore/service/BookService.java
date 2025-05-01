@@ -4,7 +4,9 @@ import com.example.bookstore.DTO.BookRequestDTO;
 import com.example.bookstore.DTO.BookResponseDTO;
 import com.example.bookstore.exception.BookNotFoundException;
 import com.example.bookstore.mapper.BookMapper;
+import com.example.bookstore.model.Author;
 import com.example.bookstore.model.Book;
+import com.example.bookstore.repository.AuthorRepository;
 import com.example.bookstore.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
 
 
     public List<BookResponseDTO> getAllBooks() {
@@ -33,16 +36,22 @@ public class BookService {
         return BookMapper.toDTO(bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id)));
     }
 
-    public Book createBook(BookRequestDTO requestDTO) {
-        Book book = BookMapper.toEntity(requestDTO);
+    public BookResponseDTO createBook(BookRequestDTO requestDTO) {
+        Author author = authorRepository.findByName(requestDTO.getAuthorName());
+        if (author == null) {
+            author = new Author();
+            author.setName(requestDTO.getAuthorName());
+            authorRepository.save(author);
+        }
+        Book book = BookMapper.toEntity(requestDTO, author);
         bookRepository.save(book);
-        return book;
+        return BookMapper.toDTO(book);
     }
 
     public BookResponseDTO updateBook(Long currId,BookRequestDTO requestDTO) {
         Book book = bookRepository.findById(currId).orElseThrow(() -> new BookNotFoundException(currId));
         book.setTitle(requestDTO.getTitle());
-        book.setAuthor(requestDTO.getAuthor());
+        book.setAuthor(authorRepository.findByName(requestDTO.getAuthorName()));
         bookRepository.save(book);
         return BookMapper.toDTO(book);
     }
@@ -50,4 +59,6 @@ public class BookService {
     public void deleteBook(Long bookId) {
         bookRepository.deleteById(bookId);
     }
+
+
 }
