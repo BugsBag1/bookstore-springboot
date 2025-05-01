@@ -51,7 +51,13 @@ public class BookService {
     public BookResponseDTO updateBook(Long currId,BookRequestDTO requestDTO) {
         Book book = bookRepository.findById(currId).orElseThrow(() -> new BookNotFoundException(currId));
         book.setTitle(requestDTO.getTitle());
-        book.setAuthor(authorRepository.findByName(requestDTO.getAuthorName()));
+        Author author = authorRepository.findByName(requestDTO.getAuthorName());
+        if (author == null) {
+            author = new Author();
+            author.setName(requestDTO.getAuthorName());
+            authorRepository.save(author);
+        }
+        book.setAuthor(author);
         bookRepository.save(book);
         return BookMapper.toDTO(book);
     }
