@@ -2,6 +2,7 @@ package com.example.bookstore.DTO;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -12,11 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookRequestDTO {
-    @NotNull(message = "Название книги не должен быть пустым")
+    @NotBlank(message = "Название книги не должен быть пустым")
     @Size(min = 2, max = 100, message = "Название книги должен быть от 2 до 100 символов")
     private String title;
 
-    @NotNull(message = "Имя автора не должен быть пустым")
+    @NotBlank(message = "Имя автора не должен быть пустым")
     @Size(min = 2, max = 100, message = "Имя автора должен быть от 2 до 100 символов")
     private String authorName;
 
