@@ -6,14 +6,18 @@ import com.example.bookstore.exception.BookNotFoundException;
 import com.example.bookstore.mapper.BookMapper;
 import com.example.bookstore.model.Author;
 import com.example.bookstore.model.Book;
+import com.example.bookstore.model.Tag;
 import com.example.bookstore.repository.AuthorRepository;
 import com.example.bookstore.repository.BookRepository;
+import com.example.bookstore.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final TagRepository tagRepository;
 
 
     public List<BookResponseDTO> getAllBooks() {
@@ -43,7 +48,20 @@ public class BookService {
             author.setName(requestDTO.getAuthorName());
             authorRepository.save(author);
         }
-        Book book = BookMapper.toEntity(requestDTO, author);
+
+        List<String> tagNames = requestDTO.getTagNames();
+        Set<Tag> tags = new HashSet<>();
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByName(tagName);
+            if (tag == null) {
+                tag = new Tag();
+                tag.setName(tagName);
+            }
+            tagRepository.save(tag);
+            tags.add(tag);
+        }
+
+        Book book = BookMapper.toEntity(requestDTO, author, tags);
         bookRepository.save(book);
         return BookMapper.toDTO(book);
     }
@@ -57,7 +75,18 @@ public class BookService {
             author.setName(requestDTO.getAuthorName());
             authorRepository.save(author);
         }
+        List<String> tagNames = requestDTO.getTagNames();
+        Set<Tag> tags = new HashSet<>();
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByName(tagName);
+            if (tag == null) {
+                tag = new Tag();
+                tag.setName(tagName);
+            }
+            tags.add(tag);
+        }
         book.setAuthor(author);
+        book.setTags(tags);
         bookRepository.save(book);
         return BookMapper.toDTO(book);
     }
