@@ -13,6 +13,7 @@ import com.example.bookstore.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,6 +42,7 @@ public class BookService {
         return BookMapper.toDTO(bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id)));
     }
 
+    @Transactional
     public BookResponseDTO createBook(BookRequestDTO requestDTO) {
         Author author = authorRepository.findByName(requestDTO.getAuthorName());
         if (author == null) {
