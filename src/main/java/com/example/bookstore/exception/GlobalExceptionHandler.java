@@ -23,24 +23,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(err ->
-                errors.put(err.getField(), err.getDefaultMessage()));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleAllExceptions(Exception ex) {
-        Map<String, Object> errMap = new HashMap<>();
-        errMap.put("timestamp", System.currentTimeMillis());
-        errMap.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errMap.put("error", "Внутренняя ошибка сервера");
-        errMap.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errMap);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", System.currentTimeMillis());
@@ -55,4 +37,16 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleAllExceptions(Exception ex) {
+        Map<String, Object> errMap = new HashMap<>();
+        errMap.put("timestamp", System.currentTimeMillis());
+        errMap.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errMap.put("error", "Внутренняя ошибка сервера");
+        errMap.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errMap);
+    }
+
+
 }

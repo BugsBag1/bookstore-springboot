@@ -12,6 +12,8 @@ import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +33,7 @@ public class BookService {
 
 
     public List<BookResponseDTO> getAllBooks() {
-        List<BookResponseDTO> responseDTOList = new ArrayList<>();
-        for (Book book : bookRepository.findAll()) {
-            responseDTOList.add(BookMapper.toDTO(book));
-        }
-        return responseDTOList;
+        return bookRepository.findAll().stream().map(BookMapper::toDTO).toList();
     }
 
     public BookResponseDTO getBookById(long id) {
@@ -95,6 +93,10 @@ public class BookService {
 
     public void deleteBook(Long bookId) {
         bookRepository.deleteById(bookId);
+    }
+
+    public Page<BookResponseDTO> getAllBooksPageble(Pageable pageable) {
+        return bookRepository.findAll(pageable).map(BookMapper::toDTO);
     }
 
 
